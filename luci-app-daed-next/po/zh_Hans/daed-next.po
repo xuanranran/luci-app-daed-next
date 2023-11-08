@@ -55,11 +55,11 @@ msgstr "DAED Next 未运行"
 msgid "Please start the DAED Next service first and try again"
 msgstr "请先启动 DAED Next 服务后重试"
 
-msgid "DAED Next or Dashboard is not running"
-msgstr "DAED Next 或 仪表板 未运行"
+msgid "dae-wing or dashboard is not running"
+msgstr "DAE-WING 或 仪表板 未运行"
 
-msgid "Please start the DAED Next service and the Dashboard service first and try again"
-msgstr "请先启动 DAED Next 和 仪表板 服务后重试"
+msgid "Please start the dae-wing service and the dashboard service first and try again"
+msgstr "请先启动 DAE-WING 和 仪表板 服务后重试"
 
 msgid "Enable Auto Subscribe Update"
 msgstr "启用订阅自动更新"
@@ -75,3 +75,12 @@ msgstr "用户名"
 
 msgid "Password"
 msgstr "密码"
+
+msgid "Dashboard Toggle"
+msgstr "仪表板开关"
+
+msgid "Toggle"
+msgstr "开/关"
+
+msgid "Dashboard is a frontend management panel, meant for configuration use only."
+msgstr "仪表板是一个前端管理面板，仅应在配置过程中启用。"

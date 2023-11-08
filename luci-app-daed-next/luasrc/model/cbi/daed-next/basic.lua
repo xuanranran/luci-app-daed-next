@@ -17,6 +17,14 @@ end
 o = s:option(Flag, "enabled", translate("Enabled"))
 o.rmempty = false
 
+o = s:option(Button, "Dashboard Toggle", translate("Dashboard Toggle"))
+o.inputtitle = translate("Toggle")
+o.inputstyle = "reload"
+o.description = translate("Dashboard is a frontend management panel, meant for configuration use only.")
+o.write = function()
+  luci.sys.exec("/etc/daed-next/dashboard.sh &> /dev/null &")
+end
+
 enable = s:option(Flag, "subscribe_auto_update", translate("Enable Auto Subscribe Update"))
 enable.rmempty = false
 
