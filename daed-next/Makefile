@@ -81,12 +81,16 @@ endif
 define Build/Compile
 	( \
 		pushd $(PKG_BUILD_DIR) ; \
+		go get -u ; \
+		go mod tidy ; \
 		$(MAKE) deps ; \
 		$(GO_GENERAL_BUILD_CONFIG_VARS) \
 		$(GO_PKG_BUILD_CONFIG_VARS) \
 		$(GO_PKG_BUILD_VARS) \
 		go generate ./... ; \
 		cd dae-core ; \
+		go get -u ; \
+		go mod tidy ; \
 		$(GO_GENERAL_BUILD_CONFIG_VARS) \
 		$(GO_PKG_BUILD_CONFIG_VARS) \
 		$(GO_PKG_BUILD_VARS) \
