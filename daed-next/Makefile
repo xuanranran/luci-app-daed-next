@@ -44,7 +44,7 @@ define Package/daed-next
   # You need enable KERNEL_DEBUG_INFO_BTF and KERNEL_BPF_EVENTS
   DEPENDS:=$(GO_ARCH_DEPENDS) $(BPF_DEPENDS) \
     +ca-bundle +kmod-sched-core +kmod-sched-bpf +kmod-xdp-sockets-diag \
-    +node +v2ray-geoip +v2ray-geosite
+    +node +v2ray-geoip +v2ray-geosite +zoneinfo-asia
 endef
 
 define Package/daed-next/description
