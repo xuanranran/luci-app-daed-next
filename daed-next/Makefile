@@ -5,13 +5,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=daed-next
-PKG_VERSION:=2023-11-21-b3eea08
+PKG_VERSION:=2023-11-23-d0a09db
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/daeuniverse/daed-revived-next.git
-PKG_SOURCE_VERSION:=b3eea089abce8c034ca9327cbac2ed16603df7ec
+PKG_SOURCE_VERSION:=d0a09db1c2dbed9cc36b5fe822017cd2a31aa9c7
 PKG_MIRROR_HASH:=skip
 
 PKG_BUILD_DIR=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/wing
