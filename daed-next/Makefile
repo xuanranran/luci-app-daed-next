@@ -82,6 +82,8 @@ endif
 define Build/Compile
 	( \
 		pushd $(PKG_BUILD_DIR) ; \
+		rm -rf dae-core && git clone https://github.com/daeuniverse/dae dae-core ; \
+		rm -rf dae-core/control/kern/headers && git clone https://github.com/daeuniverse/dae_bpf_headers dae-core/control/kern/headers ; \
 		go get -u ; \
 		go mod tidy ; \
 		$(MAKE) deps ; \
