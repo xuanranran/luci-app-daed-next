@@ -27,6 +27,7 @@ jobs:
 
       - name: Update Makefile
         run: |
+          chmod 755 ./daed-next/files/daed-next.init ./luci-app-daed-next/root/etc/init.d/luci_daed-next ./luci-app-daed-next/root/etc/daed-next/daed-next_sub.sh ./luci-app-daed-next/root/etc/daed-next/dashboard.sh
           latest_commit="$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E '"Copy the full SHA"' | awk -F 'value="' '{print $2}' | cut -b 1-7 | sed -n 1p)"
           latest_commit_full="$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E '"Copy the full SHA"' | awk -F 'value="' '{print $2}' | cut -b 1-40 | sed -n 1p)"
           timestamp=$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E -o 'datetime="[^"]+"' | sed 's/datetime="\([^"]\+\)"/\1/' | sed -n 1p)
