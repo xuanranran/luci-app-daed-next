@@ -9,12 +9,13 @@ if [ -e "$PID_FILE" ]; then
     kill $PID
     rm "$PID_FILE"
     sync && echo 3 > /proc/sys/vm/drop_caches
+    umount /var/daed-next
 else
     # 如果 PID 文件不存在，说明进程未在运行，因此启动它
     listen_port=$(uci -q get daed-next.config.listen_port)
     
     [ ! -d /var/daed-next ] && mkdir -p /var/daed-next
-    [ ! $(mountpoint -q /var/daed-next) ] && mount -t squashfs $WEB_SQUASHFS /var/daed-next
+    mount -t squashfs $WEB_SQUASHFS /var/daed-next
     
     ARGS="PORT=$listen_port HOSTNAME=0.0.0.0"
     
