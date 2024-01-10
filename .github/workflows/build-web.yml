@@ -22,21 +22,21 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools
+          sudo apt-get install -y squashfs-tools jq
           sudo npm install -g pnpm
 
       - name: Update Makefile
         run: |
           chmod 755 ./daed-next/files/daed-next.init ./luci-app-daed-next/root/etc/init.d/luci_daed-next ./luci-app-daed-next/root/etc/daed-next/daed-next_sub.sh ./luci-app-daed-next/root/etc/daed-next/dashboard.sh
-          latest_commit="$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E '"Copy the full SHA"' | awk -F 'value="' '{print $2}' | cut -b 1-7 | sed -n 1p)"
-          latest_commit_full="$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E '"Copy the full SHA"' | awk -F 'value="' '{print $2}' | cut -b 1-40 | sed -n 1p)"
-          timestamp=$(curl -s https://github.com/daeuniverse/daed-revived-next/commits/main | grep -E -o 'datetime="[^"]+"' | sed 's/datetime="\([^"]\+\)"/\1/' | sed -n 1p)
-          formatted_timestamp=$(echo $timestamp | sed -r 's/([0-9]{4})-([0-9]{2})-([0-9]{2}).*/\1-\2-\3-/')
+          latest_commit="$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.sha' | cut -b 1-7)"
+          latest_commit_full="$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.sha')"
+          timestamp=$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.commit.author.date')
+          formatted_timestamp=$(date --date="$timestamp" "+%Y-%m-%d")
           sed -i '/PKG_VERSION:/d' ./daed-next/Makefile
-          sed -i "7 a PKG_VERSION:=$formatted_timestamp$latest_commit" ./daed-next/Makefile
+          sed -i "7 a PKG_VERSION:=$formatted_timestamp-$latest_commit" ./daed-next/Makefile
           sed -i '/PKG_SOURCE_VERSION:/d' ./daed-next/Makefile
           sed -i "13 a PKG_SOURCE_VERSION:=$latest_commit_full" ./daed-next/Makefile
-          echo "version=$formatted_timestamp$latest_commit" >> "$GITHUB_ENV"
+          echo "version=$formatted_timestamp-$latest_commit" >> "$GITHUB_ENV"
 
       - name: Commit file
         run: |
