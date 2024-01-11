@@ -5,7 +5,7 @@ on: workflow_dispatch
 jobs:
   build:
     name: Build ${{ matrix.arch }}-${{ matrix.sdk }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -27,6 +27,15 @@ jobs:
       - name: Get node-empty
         run: |
           git clone https://github.com/sbwml/node-empty
+
+      - name: Init build dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo swapoff -a
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install clang
 
       - name: Building packages
         uses: sbwml/openwrt-gh-action-sdk@go1.21
