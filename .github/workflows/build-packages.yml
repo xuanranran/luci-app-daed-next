@@ -1,6 +1,9 @@
 name: Build packages
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 16 * * *
 
 jobs:
   build:
@@ -20,10 +23,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Get node-empty
-        run: |
-          git clone https://github.com/sbwml/node-empty
 
       - name: Init build dependencies
         env:
@@ -51,6 +50,17 @@ jobs:
         with:
           name: ${{ matrix.arch }}
           path: bin/packages/${{ matrix.arch }}/packages_ci/*.ipk
+          
+      - name: Create release
+        uses: ncipollo/release-action@v1.11.1
+        with:
+          name: daed-web-${{ env.version }}
+          allowUpdates: true
+          tag: daed-web-${{ env.version }}
+          commit: main
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: build/daed-web-${{ env.version }}.*
 
       - name: Upload packages
         uses: ncipollo/release-action@v1
@@ -62,3 +72,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           replacesArtifacts: true
           artifacts: "bin/packages/${{ matrix.arch }}/packages_ci/*.ipk"
+
+      - name: Delete Older Releases
+        uses: dev-drprasad/delete-older-releases@master
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

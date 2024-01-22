@@ -1,4 +1,4 @@
-name: Build Web
+name: Update PKG
 
 on:
   workflow_dispatch:
@@ -50,45 +50,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Build daed-revived-next
-        run: |
-          git clone https://github.com/daeuniverse/daed-revived-next build --depth=1
-          cd build
-          commit_id=${{ env.version }}
-          pnpm install
-          STANDALONE=1 pnpm build
-          cp -a .next/standalone out
-          cp -a .next/static out/.next/
-          cp -a public out
-          mksquashfs out daed-web-$commit_id.squashfs -comp xz
-          tar Jcf daed-web-$commit_id.tar.xz out
-
-      - name: Create release
-        uses: ncipollo/release-action@v1.11.1
-        with:
-          name: daed-web-${{ env.version }}
-          allowUpdates: true
-          tag: daed-web-${{ env.version }}
-          commit: main
-          replacesArtifacts: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: build/daed-web-${{ env.version }}.*
-
-      - name: Cleanup Workflow Logs
-        uses: Mattraks/delete-workflow-runs@main
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          repository: ${{ github.repository }}
-          retain_days: 1
-
-      - name: Delete Older Releases
-        uses: dev-drprasad/delete-older-releases@master
-        with:
-          keep_latest: 3
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup Old Action Artifacts
         uses: heidi-pay/gha-delete-artifacts@main
