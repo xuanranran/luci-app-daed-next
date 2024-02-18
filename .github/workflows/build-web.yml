@@ -1,9 +1,6 @@
 name: Build Web
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: 0 16 * * *
+on: workflow_dispatch
 
 jobs:
   build:
@@ -15,47 +12,22 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Build System Setup
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools jq
+          sudo apt-get install -y squashfs-tools
           sudo npm install -g pnpm
-
-      - name: Update Makefile
-        run: |
-          chmod 755 ./daed-next/files/daed-next.init ./luci-app-daed-next/root/etc/init.d/luci_daed-next ./luci-app-daed-next/root/etc/daed-next/daed-next_sub.sh ./luci-app-daed-next/root/etc/daed-next/dashboard.sh
-          latest_commit="$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.sha' | cut -b 1-7)"
-          latest_commit_full="$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.sha')"
-          timestamp=$(curl -s https://api.github.com/repos/daeuniverse/daed-revived-next/commits/main | jq -r '.commit.author.date')
-          formatted_timestamp=$(date --date="$timestamp" "+%Y-%m-%d")
-          sed -i '/PKG_VERSION:/d' ./daed-next/Makefile
-          sed -i "7 a PKG_VERSION:=$formatted_timestamp-$latest_commit" ./daed-next/Makefile
-          sed -i '/PKG_SOURCE_VERSION:/d' ./daed-next/Makefile
-          sed -i "13 a PKG_SOURCE_VERSION:=$latest_commit_full" ./daed-next/Makefile
-          echo "version=$formatted_timestamp-$latest_commit" >> "$GITHUB_ENV"
-
-      - name: Commit file
-        run: |
-          rm -rf build
-          git config --global user.email juanshengyuan@gmail.com
-          git config --global user.name xuanranran
-          git add .
-          git commit -m "Update `date +%Y/%m/%d\ %H:%M:%S\ %Z`" -a
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
 
       - name: Build daed-revived-next
         run: |
           git clone https://github.com/daeuniverse/daed-revived-next build --depth=1
           cd build
-          commit_id=${{ env.version }}
+          commit_id=$(git log --pretty=format:%cd -n 1 --date=short)-$(git log --pretty=format:%h -n 1)
+          echo "version=$commit_id" >> "$GITHUB_ENV"
           pnpm install
           STANDALONE=1 pnpm build
           cp -a .next/standalone out
@@ -74,34 +46,3 @@ jobs:
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: build/daed-web-${{ env.version }}.*
-
-      - name: Cleanup Workflow Logs
-        uses: Mattraks/delete-workflow-runs@main
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          repository: ${{ github.repository }}
-          retain_days: 1
-
-      - name: Delete Older Releases
-        uses: dev-drprasad/delete-older-releases@master
-        with:
-          keep_latest: 3
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Cleanup Old Action Artifacts
-        uses: heidi-pay/gha-delete-artifacts@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          days: 3
-          max-artifacts-to-delete: 100
-          dry-run: no
-
-      - name: Cleanup Workflow Logs
-        uses: Mattraks/delete-workflow-runs@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          retain_days: 3
