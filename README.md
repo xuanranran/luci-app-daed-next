@@ -15,29 +15,33 @@
 ### 1. Get Source
 
 ```bash
-git clone https://github.com/sbwml/luci-app-daed-next package/daed-next
+git clone https://github.com/LovinYarn/luci-app-daed-next package/daed-next
 ```
 
-### 2. Install clang-13, refer to https://apt.llvm.org
+### 2. Install clang-15, refer to https://apt.llvm.org
 
 ```bash
 apt-get update
-apt-get install -y clang-13
+apt-get install -y clang-15
 ```
 
 ### 3. Compile Options (Requirements for `DAED` to work)
 
 - Enable eBPF support, add content to: `.config`
   ```
+  # DAE
   CONFIG_DEVEL=y
-  CONFIG_BPF_TOOLCHAIN_HOST=y
-  # CONFIG_BPF_TOOLCHAIN_NONE is not set
-  CONFIG_KERNEL_BPF_EVENTS=y
-  CONFIG_KERNEL_CGROUP_BPF=y
   CONFIG_KERNEL_DEBUG_INFO=y
-  CONFIG_KERNEL_DEBUG_INFO_BTF=y
   # CONFIG_KERNEL_DEBUG_INFO_REDUCED is not set
+  CONFIG_KERNEL_DEBUG_INFO_BTF=y
+  CONFIG_KERNEL_CGROUPS=y
+  CONFIG_KERNEL_CGROUP_BPF=y
+  CONFIG_KERNEL_BPF_EVENTS=y
+  CONFIG_BPF_TOOLCHAIN_HOST=y
   CONFIG_KERNEL_XDP_SOCKETS=y
+  CONFIG_PACKAGE_kmod-xdp-sockets-diag=y
+  CONFIG_PACKAGE_kmod-sched-bpf=y
+  CONFIG_PACKAGE_kmod-sched-core=y
   ```
 
 ### 4. Build luci-app-daed-next
