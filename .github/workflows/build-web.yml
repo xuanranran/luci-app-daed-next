@@ -24,7 +24,7 @@ jobs:
 
       - name: Build daed-revived-next
         run: |
-          git clone --depth=1 -b dependabot/npm_and_yarn/tanstack/react-query-5.20.5 https://github.com/daeuniverse/daed-revived-next build
+          git clone --depth=1 -b main https://github.com/daeuniverse/daed-revived-next build
           cd build
           commit_id=$(git log --pretty=format:%cd -n 1 --date=short)-$(git log --pretty=format:%h -n 1)
           echo "version=$commit_id" >> "$GITHUB_ENV"
