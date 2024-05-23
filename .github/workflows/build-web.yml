@@ -60,7 +60,6 @@ jobs:
           cd build
           taze minor -r -w
           commit_id=${{ env.version }}
-          npm i
           pnpm install
           STANDALONE=1 pnpm build
           cp -a .next/standalone out
