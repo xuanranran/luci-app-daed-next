@@ -60,7 +60,7 @@ jobs:
           cd build
           taze minor -r -w
           commit_id=${{ env.version }}
-          pnpm install
+          pnpm install --no-frozen-lockfile
           STANDALONE=1 pnpm build
           cp -a .next/standalone out
           cp -a .next/static out/.next/
