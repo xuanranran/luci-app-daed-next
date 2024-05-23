@@ -58,7 +58,7 @@ jobs:
         run: |
           git clone https://github.com/daeuniverse/daed-revived-next build --depth=1
           cd build
-          taze -x react,react-dom -w -r
+          taze -x next -w -r
           commit_id=${{ env.version }}
           pnpm install --no-frozen-lockfile
           STANDALONE=1 pnpm build
