@@ -66,7 +66,7 @@ jobs:
           cp -a .next/standalone out
           cp -a .next/static out/.next/
           cp -a public out
-          mksquashfs out daed-web-$commit_id.squashfs -comp xz
+          mksquashfs out daed-web-$commit_id.squashfs -comp xz -Xdict-size 100% -noappend
           tar Jcf daed-web-$commit_id.tar.xz out
 
       - name: Create release
