@@ -24,6 +24,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y squashfs-tools jq
           sudo npm install -g pnpm
+          sudo npm i taze -g
 
       - name: Update Makefile
         run: |
@@ -55,7 +56,9 @@ jobs:
         run: |
           git clone https://github.com/daeuniverse/daed-revived-next build --depth=1
           cd build
+          taze minor -r -w
           commit_id=${{ env.version }}
+          npm i
           pnpm install
           STANDALONE=1 pnpm build
           cp -a .next/standalone out
