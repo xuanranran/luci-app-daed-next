@@ -96,8 +96,6 @@ jobs:
 
       - name: Cleanup Old Action Artifacts
         uses: c-hive/gha-remove-artifacts@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           age: '3 days'
           skip-recent: 3
