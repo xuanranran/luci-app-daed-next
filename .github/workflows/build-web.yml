@@ -9,11 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@main
         with:
           node-version: 18
 
@@ -69,7 +69,7 @@ jobs:
           tar Jcf daed-web-$commit_id.tar.xz out
 
       - name: Create release
-        uses: ncipollo/release-action@v1.11.1
+        uses: ncipollo/release-action@main
         with:
           name: daed-web-${{ env.version }}
           allowUpdates: true
@@ -95,13 +95,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup Old Action Artifacts
-        uses: heidi-pay/gha-delete-artifacts@main
+        uses: c-hive/gha-remove-artifacts@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          days: 3
-          max-artifacts-to-delete: 100
-          dry-run: no
+          age: '3 days'
+          skip-recent: 3
 
       - name: Cleanup Workflow Logs
         uses: Mattraks/delete-workflow-runs@main
