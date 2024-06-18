@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@main
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@main
         with:
@@ -52,6 +53,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
+          branch: master
         continue-on-error: true
 
       - name: Build daed-revived-next
